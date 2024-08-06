@@ -1,7 +1,3 @@
-Sure! Here is the revised README without code blocks and folder structure:
-
----
-
 # NestJS Authentication and User Management
 
 This project is a basic implementation of authentication and user management using NestJS. It includes features for user registration, login, and protected routes for user management that are accessible only to authenticated users.
