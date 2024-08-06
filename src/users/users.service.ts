@@ -20,4 +20,8 @@ export class UsersService {
     user.password = await bcrypt.hash(user.password, salt);
     await this.usersRepository.save(user);
   }
+
+  async getProfile(userId: number): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { user_id: userId } });
+  }
 }
