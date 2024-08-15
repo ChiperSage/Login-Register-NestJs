@@ -1,33 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
-import * as bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && await bcrypt.compare(pass, user.password)) {
-      const { password, ...result } = user;
-      return result;
+  async register(body: { username: string; email: string; password: string }) {
+    // Save user to the database
+    const newUser = this.userRepository.create(body);
+    await this.userRepository.save(newUser);
+    return `User with email ${body.email} has been registered.`;
+  }
+
+  async login(body: { email: string; password: string }) {
+    // Check user credentials
+    const user = await this.userRepository.findOneBy({ email: body.email });
+    if (user && user.password === body.password) {
+      return `User with email ${body.email} has been logged in.`;
+    } else {
+      return `Invalid credentials.`;
     }
-    return null;
-  }
-
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.user_id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
-
-  async register(user: any) {
-    await this.usersService.create(user);
-    return this.login(user);
   }
 }
