@@ -1,29 +1,30 @@
 import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { RolesModule } from './roles/roles.module';
-import { GroupsModule } from './groups/groups.module';
-import { User } from './users/entities/user.entity';
-import { Role } from './roles/entities/role.entity';
-import { Group } from './groups/entities/group.entity';
+import { User } from './auth/user.entity';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
+      type: 'mysql',
       host: 'localhost',
-      port: 5432,
-      username: 'your-username',
-      password: 'your-password',
-      database: 'your-database',
-      entities: [User, Role, Group],
-      synchronize: true,
+      port: 3306,
+      username: 'root',
+      password: 'password',
+      database: 'nestjs_auth',
+      entities: [User],
+      synchronize: true, // Be cautious with this in production
     }),
     AuthModule,
-    UsersModule,
-    RolesModule,
-    GroupsModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
