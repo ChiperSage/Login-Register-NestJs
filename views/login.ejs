@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+
+    <!-- Display error message if present -->
+    <% if (errorMessage) { %>
+        <div style="color: red;"><%= errorMessage %></div>
+    <% } %>
+
+    <form action="/auth/login" method="POST">
+        <div>
+            <label for="usernameOrEmail">Username or Email:</label><br>
+            <input type="text" id="usernameOrEmail" name="usernameOrEmail" value="<%= usernameOrEmail || '' %>" required>
+        </div>
+        <div>
+            <label for="password">Password:</label></br>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+    </form>
+</body>
+</html>
