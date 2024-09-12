@@ -1,30 +1,63 @@
+// import { Module } from '@nestjs/common';
+// // import { WelcomeController } from './welcome/welcome.controller';
+// import { TypeOrmModule } from '@nestjs/typeorm';
+// import { AuthModule } from './auth/auth.module';
+// import { WelcomeModule } from './welcome/welcome.module';
+// import { DashboardModule } from './dashboard/dashboard.module';
+// import { User } from './auth/user.entity';
+
+// @Module({
+//   imports: [
+//     TypeOrmModule.forRoot({
+//       type: 'mysql',
+//       host: 'localhost',
+//       port: 3300,
+//       username: 'root',
+//       password: '',
+//       database: 'nest_auth',
+//       entities: [User],
+//       synchronize: true,
+//     }),
+//     TypeOrmModule.forFeature([User]),
+//     AuthModule,
+//     WelcomeModule,
+//     DashboardModule
+//   ],
+//   controllers: [],
+//   providers: [],
+// })
+// export class AppModule {}
+
 import { Module } from '@nestjs/common';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { WelcomeModule } from './welcome/welcome.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { User } from './auth/user.entity';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-    }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'password',
-      database: 'nestjs_auth',
-      entities: [User],
-      synchronize: true, // Be cautious with this in production
+    ConfigModule.forRoot(), // Untuk memuat variabel lingkungan
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'mysql',
+        host: 'localhost',
+        port: 3300,
+        username: 'root',
+        password: '',
+        database: 'nest_auth',
+        entities: [User],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     AuthModule,
+    WelcomeModule,
+    DashboardModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [], // Tambahkan jika diperlukan
+  providers: [], // Tambahkan jika diperlukan
 })
 export class AppModule {}
