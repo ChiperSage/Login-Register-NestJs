@@ -1,4 +1,9 @@
-This project is a basic implementation of authentication and user management using NestJS. It includes features for user registration, login, and protected routes for user management that are accessible only to authenticated users.
+### Auth System with NestJS
 
--- mysql database
--- ejs template
+This project is an authentication system built with **NestJS**, implementing registration, login, and logout functionality. It uses **TypeORM** for database interactions and includes **DTO-based validation** using `class-validator` to ensure user inputs are correctly formatted. Features include:
+
+- User registration with validation (e.g., minimum username length, email format).
+- Password hashing for secure storage.
+- Login with session management.
+- User session handling with logout functionality.
+- Built with modular architecture and fully customizable templates for login and registration views.
